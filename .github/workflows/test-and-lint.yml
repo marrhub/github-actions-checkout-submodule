@@ -25,7 +25,13 @@ jobs:
         run: |
           echo "Listing .github/actions/docker-login:"
           ls -la .github/actions/docker-login
-        
+
+      - name: Debug submodule content pwsh
+        shell: pwsh
+        run: |
+          Write-Host "Listing .github/actions/docker-login:"
+          Get-ChildItem -Path .github/actions/docker-login -Force  
+
       - name: Login to Docker Hub
         # uses: docker/login-action@v3
         uses: ./.github/actions/docker-login
@@ -53,9 +59,24 @@ jobs:
         with:
           submodules: 'true'
           fetch-depth: 0
-      - name: Assume role
+
+      - name: Debug submodule content pwsh
         shell: pwsh
-        run: ./bin/assume_terraform_role.ps1 ma-recipe-app-terraform-role
+        run: |
+          Write-Host "Listing .github/actions/docker-login:"
+          Get-ChildItem -Path .github/actions/docker-login -Force  
+        
+      - name: Login to Docker Hub
+        # uses: docker/login-action@v3
+        uses: ./.github/actions/docker-login
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: echo job1-ubuntu
+        run: echo "job1-ubuntu"
+      - name: Exec script.ps1
+        shell: pwsh
+        run: ./bin/script.ps1
 
   # Final Status Check
   final-status:
